@@ -1,5 +1,6 @@
 package ro.vladfernoaga.telegram_chatbot_starter.handler;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -7,12 +8,21 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pengrad.telegrambot.Callback;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.CallbackQuery;
+import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.model.request.ParseMode;
+import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.response.BaseResponse;
+
+import ro.vladfernoaga.telegram_chatbot_starter.controller.FreeTextCommand;
+
+
 
 @Service
 public class SimpleUpdateHandler implements UpdatesListener {
@@ -23,24 +33,51 @@ public class SimpleUpdateHandler implements UpdatesListener {
 	@Autowired
 	private TelegramBot bot;
 
+	// Process free text input from user
+
+	public void process(Message m) {
+		String messageText = m.text();
+		for (FreeTextCommand command : FreeTextCommand.values()) {
+			if (command.getCommandText().matches(messageText)) {
+				command.getAction().execute(bot, m);
+			}
+		}
+	}
+
+	public void procces(CallbackQuery callback) {
+		Message m = callback.message();
+		
+		Integer chatId = m.from().id();
+		Integer messageId = m.messageId();
+
+		SendMessage request = new SendMessage(chatId,
+				String.format("I recived your callback: %s", callback.data())).parseMode(ParseMode.HTML)
+						.disableNotification(false).replyMarkup(new ForceReply());
+		
+		bot.execute(request);
+	}
+	
+	private void process(Update u) {
+		if(u.callbackQuery() != null) {
+			procces(u.callbackQuery());
+			return;
+		}
+		
+		if(u.message() != null) {
+			process(u.message());
+			return;
+		}
+	}
 	
 	@Override
 	public int process(List<Update> updates) {
-		
 		for (Update update : updates) {
-			Integer chatId = update.message().from().id();
-			String messageText = update.message().text();
-			Integer messageId = update.message().messageId();
 			
-			SendMessage request = new SendMessage(chatId, String.format("<b>Hello World</b> I recived your message: %s",messageText))
-					.parseMode(ParseMode.HTML)
-					.disableNotification(false)
-					.replyToMessageId(messageId)
-					.replyMarkup(new ForceReply())
-					;
-			bot.execute(request);
+			process(update);
+			
+			
 		}
-		
+
 		return UpdatesListener.CONFIRMED_UPDATES_ALL;
 	}
 
