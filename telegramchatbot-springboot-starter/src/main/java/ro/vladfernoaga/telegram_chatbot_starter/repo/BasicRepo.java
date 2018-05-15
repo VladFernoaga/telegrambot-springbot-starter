@@ -8,7 +8,7 @@ import ro.vladfernoaga.telegram_chatbot_starter.model.BasicInfo;
 
 public interface BasicRepo extends JpaRepository<BasicInfo, Long>{
 
-	Optional<BasicInfo> findById(Long name);
+	Optional<BasicInfo> findById(Long id);
 	
 	Optional<BasicInfo>	findByName(String name);
 

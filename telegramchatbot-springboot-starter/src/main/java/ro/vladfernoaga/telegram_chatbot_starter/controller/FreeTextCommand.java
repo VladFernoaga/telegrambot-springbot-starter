@@ -3,7 +3,7 @@ package ro.vladfernoaga.telegram_chatbot_starter.controller;
 public enum FreeTextCommand {
 
 	
-	INLINE_COMMAND("reparatie",new InlineCommandAction() ),
+	INLINE_COMMAND("Cu o reparatie",new InlineCommandAction() ),
 	START_COMMAND("Salut",new StartCommandAction() )
 	
 	;
