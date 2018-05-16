@@ -8,15 +8,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Model")
-public class ModelInfo {
-	
+@Table(name="Issues")
+public class IssuesInfo {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "Id_model")
+	@Column(name = "Id_issue")
 	private Long id;
 
-	@Column(name = "Name_model", unique = true)
+	@Column(name = "Name_issue", unique = true)
 	private String name;
 
 	public Long getId() {
@@ -34,10 +34,4 @@ public class ModelInfo {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	@Override
-	public String toString() {
-		return "ModelInfo [id=" + id + ", name=" + name + "]";
-	}
-
 }

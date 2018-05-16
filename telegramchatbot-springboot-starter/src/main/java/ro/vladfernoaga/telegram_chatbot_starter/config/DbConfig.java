@@ -21,8 +21,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 /** The Main Configuration Setup for the DataBase **/
 @Configuration
-@EnableJpaRepositories(basePackages = "ro.vladfernoaga.telegram_chatbot_starter.repo",
-    entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager")
+@EnableJpaRepositories(
+		basePackages = "ro.vladfernoaga.telegram_chatbot_starter.repo",
+		entityManagerFactoryRef = "entityManagerFactory", 
+		transactionManagerRef = "transactionManager")
 public class DbConfig {
 
   @Autowired

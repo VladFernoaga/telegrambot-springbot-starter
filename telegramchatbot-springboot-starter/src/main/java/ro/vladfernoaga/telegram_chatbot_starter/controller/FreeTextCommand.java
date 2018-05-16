@@ -2,31 +2,23 @@ package ro.vladfernoaga.telegram_chatbot_starter.controller;
 
 public enum FreeTextCommand {
 
-	
-	INLINE_COMMAND("Cu o reparatie",new InlineCommandAction() ),
-	START_COMMAND("Salut",new StartCommandAction() )
-	
-	;
-	
+	INLINE_COMMAND("Cu o reparatie", InlineCommandAction.class),
+	START_COMMAND("Salut", StartCommandAction.class);
 	
 	private String commandText;
-	private MessageCommandAction<?> action;
+	private Class<? extends MessageCommandAction<?>> actionClass;
 	
-	
-	private FreeTextCommand(String commandText, MessageCommandAction<?> action) {
+	private FreeTextCommand(String commandText, Class<? extends MessageCommandAction<?>> actionClass) {
 		this.commandText = commandText;
-		this.action = action;
+		this.actionClass = actionClass;
 	}
-
 
 	public String getCommandText() {
 		return commandText;
 	}
 
-
-	public MessageCommandAction<?> getAction() {
-		return action;
+	public Class<? extends MessageCommandAction<?>> getActionClass() {
+		return actionClass;
 	}
-	
 	
 }

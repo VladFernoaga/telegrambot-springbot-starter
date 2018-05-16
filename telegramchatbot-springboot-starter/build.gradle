@@ -72,7 +72,7 @@ dependencies {
     compile ('org.aspectj:aspectjweaver:1.8.11')	
     compile "commons-io:commons-io:2.5"
 	
-	 //devtools
+	//devtools
     runtime('org.springframework.boot:spring-boot-devtools:1.5.9.RELEASE', exludeDefaultLogger)
 	
 	//Test    

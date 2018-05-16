@@ -1,7 +1,8 @@
 package ro.vladfernoaga.telegram_chatbot_starter.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
@@ -9,13 +10,14 @@ import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 
+@Service
 public class StartCommandAction implements MessageCommandAction<Void> {
 
-	public static final Logger LOG = LoggerFactory.getLogger(StartCommandAction.class); 
+	public static final Logger LOGGER = LogManager.getLogger();  
 	
 	@Override
 	public Void execute(TelegramBot bot, Message m) {
-		LOG.info("Started action chain ... ");
+		LOGGER.info("Started action chain ... ");
 		
 		Integer chatId = m.from().id();
 		String messageText = m.text();
@@ -26,7 +28,7 @@ public class StartCommandAction implements MessageCommandAction<Void> {
 						.disableNotification(false).replyToMessageId(messageId).replyMarkup(new ForceReply());
 		bot.execute(request);
 		
-		LOG.info("Waiting for request ... ");
+		LOGGER.info("Waiting for request ... ");
 		return null;
 	}
 
