@@ -36,36 +36,15 @@ public class SimpleUpdateHandler implements UpdatesListener {
 	@Autowired
 	private ApplicationContext context;
 
-	// Process free text input from user
+	@Override
+	public int process(List<Update> updates) {
+		for (Update update : updates) {
 
-	public void process(Message m) {
-		String messageText = m.text();
-		for (FreeTextCommand command : FreeTextCommand.values()) {
-			if (command.getCommandText().matches(messageText)) {
-				getActionInstance(command).execute(bot, m);
-			}
+			process(update);
+
 		}
-	}
 
-	private MessageCommandAction<?> getActionInstance(FreeTextCommand command) {
-		LOGGER.info(command.name() + " " + command.getActionClass().getName());
-		MessageCommandAction<?> action = (MessageCommandAction<?>) context.getBean(command.getActionClass());
-		if(action == null) {
-			LOGGER.warn("Could not find action bean in context");
-		}
-		return action;
-	}
-
-	public void procces(CallbackQuery callback) {
-		Message m = callback.message();
-
-		Integer chatId = m.from().id();
-		Integer messageId = m.messageId();
-
-		SendMessage request = new SendMessage(chatId, String.format("I recived your callback: %s", callback.data()))
-				.parseMode(ParseMode.HTML).disableNotification(false).replyMarkup(new ForceReply());
-
-		bot.execute(request);
+		return UpdatesListener.CONFIRMED_UPDATES_ALL;
 	}
 
 	private void process(Update u) {
@@ -80,15 +59,35 @@ public class SimpleUpdateHandler implements UpdatesListener {
 		}
 	}
 
-	@Override
-	public int process(List<Update> updates) {
-		for (Update update : updates) {
+	// Process free text input from user
 
-			process(update);
-
+	public void process(Message m) {
+		String messageText = m.text();
+		for (FreeTextCommand command : FreeTextCommand.values()) {
+			if (command.getCommandText().matches(messageText)) {
+				getActionInstance(command).execute(bot, m);
+			}
 		}
+	}
 
-		return UpdatesListener.CONFIRMED_UPDATES_ALL;
+	public void procces(CallbackQuery callback) {
+
+		Message m = callback.message();
+		String messageText = m.text();
+		for (FreeTextCommand command : FreeTextCommand.values()) {
+			if (command.getCommandText().equals(messageText)) {
+				getActionInstance(command).execute(bot, callback);
+			}
+		}
+	}
+
+	private MessageCommandAction<?> getActionInstance(FreeTextCommand command) {
+		LOGGER.info(command.name() + " " + command.getActionClass().getName());
+		MessageCommandAction<?> action = (MessageCommandAction<?>) context.getBean(command.getActionClass());
+		if (action == null) {
+			LOGGER.warn("Could not find action bean in context");
+		}
+		return action;
 	}
 
 }

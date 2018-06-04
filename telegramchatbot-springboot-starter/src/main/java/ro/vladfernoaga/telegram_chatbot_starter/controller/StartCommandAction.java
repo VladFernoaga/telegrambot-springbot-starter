@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.model.request.ParseMode;
@@ -29,6 +30,12 @@ public class StartCommandAction implements MessageCommandAction<Void> {
 		bot.execute(request);
 		
 		LOGGER.info("Waiting for request ... ");
+		return null;
+	}
+
+	@Override
+	public Void execute(TelegramBot bot, CallbackQuery m) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
